@@ -9,8 +9,32 @@
     {% tailwind_css %}
 </head>
 <body>
-    <h1 class="text-blue-600">Hieu</h1>
-    <div class="bg-violet-900 h-52 w-52 rounded-md"></div>
+    
+    <div style="background-image: {% static 'img/Kim_Jong_Un.png' %};" class="flex h-screen justify-center items-center">
+        <div class="absolute bg-white flex flex-col rounded-lg shadow-xl border shadow-red-400 p-8 max-w-md border-solid border-blue-600">
+            <h2 class="text-3xl font-semibold mb-6 text-blue-700 text-center">Vote For Your Future <span class="text-red-600">President</span></h2>
+            <form action="" method="post" class="space-y-4 mb-6">
+                {% csrf_token %}
+                <div class="max-w-lg mx-auto flex flex-col space-y-2">
+                    <label for="vote" class="text-sm font-medium  text-black">Choose your tax collector</label>
+                    <select name="vote" class="rounded-2xl form-select" {% if userVote %}disabled{% endif %}>
+                        <option value="">Select...</option>
+                        {% for value, label in form.vote.field.choices %}
+                            <option value="{{ value }}" {% if form.vote.value == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                {% if not userVote %}
+                    <button type="submit" class="w-full p-2 rounded-lg bg-blue-600 text-white font-semibold text-center hover:scale-105 hover:bg-red-600">VOTE</button>
+                {% else %}
+                    <button type="submit" class="w-full p-2 rounded-lg bg-red-600 text-white font-semibold text-center" disabled>You already Voted</button>
+                {% endif %}
+            </form>
+            <h2 class="text-xl font-semibold mb-6 text-blue-600 text-center">You voted for {{ voted_for }}</h2>
+        </div>
+    </div>
+
 </body>
 <script src="{% static 'js/chart.js' %}"></script>
 </html>

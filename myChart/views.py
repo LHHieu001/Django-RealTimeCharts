@@ -7,11 +7,31 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from .models import *
+from .forms import VoteForm
 
 
-class baseView(TemplateView):
-    template_name = 'base.html'
-    
+def baseView(request):
+    if request.method == 'POST':
+        form = VoteForm(request.POST)
+        if form.is_valid():
+            profile = form.save(commit=False)
+            profile.user = request.user
+            profile.save()
+            return redirect('base')
+    else:
+        form = VoteForm()
+        
+    userVote = voter.objects.filter(user=request.user).first()
+    if userVote:
+        voted_for = dict(voter.candi.choices)[userVote.vote]
+    context = {
+        'form' : form,
+        'current_user': request.user,
+        'userVote' : userVote,
+        'voted_for' : voted_for
+    }
+    return render(request, 'base.html', context)
 # class signInView(FormView):
 #     template_name = 'login.html'
 #     success_url = reverse_lazy('base')
@@ -38,13 +58,14 @@ def signInView(request):
          email = request.POST.get('email')
          password = request.POST.get('password')
          
-         user = authenticate(email = email, password = password)
+         user = authenticate(username = email, password = password)
          if user is not None:
              login(request, user)
              return redirect('base')
          else:
             messages.error(request, 'Incorrect Email or Password')
     
+
     context = {}
     return render(request, 'login.html', context)
 
@@ -56,28 +77,25 @@ def signUpView(request):
         confirm_password = request.POST.get('cpassword')
         approve = True
         
-        regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
+        regex = re.compile('[@_!#$%^&*()<>?/|}{~:]')
         regex_num = re.compile('[0-9]')
         regex_upper = re.compile('[A-Z]')
         
         if (len(password) < 8 or regex.search(password) == None or regex_num.search(password) == None or regex_upper.search(password) == None):
             messages.error(request, 'Password must at least contains 8 characters (Including at least 1 special character, 1 number and 1 uppercase letter)')
             approve = False
-            
-        if (len(username) < 8):
-            messages.error(request, 'Username must at least contains 8 characters')
         
-        getAllUsers_username = User.objects.filter(username=username)
+        getAllUsers_username = User.objects.filter(username=email)
         if getAllUsers_username: 
-            messages.error('Username already exists')
+            messages.error(request, 'Email already exists')
             approve = False
             
         if (password != confirm_password):
-            messages.error("Password doesn't match")
+            messages.error(request, "Password doesn't match")
             approve = False
         
         if approve == True:
-            new_user = User.objects.create_user(username = username, email = email, password = password)
+            new_user = User.objects.create_user(username = email, password = password)
             new_user.save()
             login(request, new_user)
             return redirect('base')

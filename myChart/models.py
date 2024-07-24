@@ -23,8 +23,13 @@ class voter(models.Model):
     vote = models.CharField(max_length=100, choices=candi.choices, default=candi.NO_VOTE)
     date = models.DateField(default=date.today)
     
+    # def save(self, *args, **kwargs):
+    #     if not self.id:
+    #         self.date = date.today()
+    #     super().save(*args, **kwargs)
+    
     def __str__(self):
-        return self.user
+        return self.user.username
     
 class userInfo(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
