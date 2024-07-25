@@ -1,0 +1,30 @@
+{% load static tailwind_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {% tailwind_css %}
+</head>
+<body>
+    
+    <div class="h-screen mx-auto justify-center items-center flex flex-col space-y-2">
+        <h2 class="text-center text-3xl text-blue-700 mt-8">Candiates Vote Count</h2>
+        <canvas class="p-8 max-w-7xl" id="candiChart"></canvas>
+    </div>
+
+    <div class="h-screen mx-auto justify-center items-center flex flex-col space-y-2 absolute">
+        <h2 class="text-center text-3xl text-blue-700 mt-8">Party Vote Count</h2>
+        <h3 class="text-center text-2xl text-red-700 mt-8">270 to Win</h3>
+        <div class="flex flex-row">
+            <canvas class="p-8 max-w-7xl" id="partyChart"></canvas>
+        </div>
+        
+    </div>
+    
+</body>
+<script src ="{% static 'js/chart.js' %}"></script>
+</html>

@@ -25,6 +25,8 @@ def baseView(request):
     userVote = voter.objects.filter(user=request.user).first()
     if userVote:
         voted_for = dict(voter.candi.choices)[userVote.vote]
+    else:
+        voted_for = None
     context = {
         'form' : form,
         'current_user': request.user,
@@ -102,6 +104,10 @@ def signUpView(request):
     
     context = {}
     return render(request, 'register.html', context)
+
+def chartView(request):
+    context = {}
+    return render(request, 'chart.html', context)
         
         
     
