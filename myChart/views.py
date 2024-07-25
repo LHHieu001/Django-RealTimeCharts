@@ -10,8 +10,9 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import *
 from .forms import VoteForm
 
-
+@login_required
 def baseView(request):
+    
     if request.method == 'POST':
         form = VoteForm(request.POST)
         if form.is_valid():
@@ -56,6 +57,9 @@ def baseView(request):
 
 def signInView(request):
     
+    if request.user.is_authenticated:
+        return redirect('base')
+    
     if request.method == 'POST':         
          email = request.POST.get('email')
          password = request.POST.get('password')
@@ -72,6 +76,10 @@ def signInView(request):
     return render(request, 'login.html', context)
 
 def signUpView(request):
+    
+    if request.user.is_authenticated:
+        return redirect('base')
+    
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
@@ -108,6 +116,12 @@ def signUpView(request):
 def chartView(request):
     context = {}
     return render(request, 'chart.html', context)
+
+@login_required
+def signOutView(request):
+    logout(request)
+    return redirect('signin')
+    
         
         
     

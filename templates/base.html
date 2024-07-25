@@ -10,9 +10,9 @@
 </head>
 <body>
     
-    <div style="background-image: {% static 'img/Kim_Jong_Un.png' %};" class="flex h-screen justify-center items-center">
+    <div style="background-image: url('{% static 'img/Kim_Jong_Un.png' %}');" class="flex h-screen justify-center items-center bg-left-bottom sm:bg-cover bg-fixed">
         <div class="absolute bg-white flex flex-col rounded-lg shadow-xl border shadow-red-400 p-8 max-w-md border-solid border-blue-600">
-            <h2 class="text-3xl font-semibold mb-6 text-blue-700 text-center">Vote For Your Future <span class="text-red-600">President</span></h2>
+            <h2 class="text-3xl font-semibold mb-6 text-blue-700 text-center">Vote For Your Future <span class="text-red-600 font-bold">President</span></h2>
             <form action="" method="post" class="space-y-4 mb-6">
                 {% csrf_token %}
                 <div class="max-w-lg mx-auto flex flex-col space-y-2">
@@ -31,8 +31,13 @@
                     <button type="submit" class="w-full p-2 rounded-lg bg-red-600 text-white font-semibold text-center" disabled>You already Voted</button>
                 {% endif %}
             </form>
+
+            {% if userVote %}
             <h2 class="text-xl font-semibold mb-6 text-blue-600 text-center">You voted for {{ voted_for }}</h2>
+            {% endif %}
+            <a class="w-1/2 mx-auto" href="{% url 'signout' %}"><button class="w-full rounded-xl text-white bg-blue-800 p-2 hover:scale-105 hover:bg-red-700">Log out</button></a>
         </div>
+        
     </div>
 
 </body>

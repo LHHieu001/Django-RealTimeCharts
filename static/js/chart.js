@@ -25,7 +25,14 @@ var partyGraphData = {
     datasets: [{
         data: [],
         borderWidth: 1,
-        backgroundColor: ['rgb(54, 162, 235)']
+        backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)',
+            'rgb(128,128,128)'
+        ],
+        weight: 270,
+        hoverOffset: 4
     }]
     },
     options: {
@@ -66,13 +73,20 @@ socket.onmessage = function(e){
     republicanVote = candiData.trump + candiData.mike + candiData.halley;
     democraticVote = candiData.harris + candiData.joe + candiData.obama;
     thirdVote = candiData.west + candiData.oliver + candiData.kennedy;
+    remainVote = 20 - republicanVote - democraticVote - thirdVote;
     
     partyGraphData.data.labels = [
-        'Republican Party'
+        'Republican Party',
+        'Democratic Party',
+        'Third Party',
+        'Remain vote'
     ]
     
     partyGraphData.data.datasets[0].data = [
         republicanVote,
+        democraticVote,
+        thirdVote,
+        remainVote
         // democraticVote,
         // thirdVote
     ];
